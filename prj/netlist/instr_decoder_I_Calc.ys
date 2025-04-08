@@ -1,3 +1,0 @@
-read_verilog -sv -formal -overwrite {workspace}/user/src/instruction_decoder/instr_I_type.v
-design -reset-vlog; proc;
-write_json {workspace}/prj/netlist/instr_decoder_I_Calc.json

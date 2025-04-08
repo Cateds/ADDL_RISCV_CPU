@@ -1,4 +1,5 @@
 `include "../../inc/alu_opcode.v"
+`include "../../inc/pc_mux.v"
 
 module branch_unit(
         input wire [31:0] alu_result,
@@ -11,7 +12,7 @@ module branch_unit(
     assign slt_result = alu_result[0]; // alu_opcode: ALU_SLT
     assign sltu_result = alu_result[0]; // alu_opcode: ALU_SLTU
     reg branch_flag;
-    assign branch = {pc_jump, branch_flag};
+    assign branch = pc_jump ? `PC_MUX_ALU_OUT : {1'b0, branch_flag};
 
     always @(*) begin
         case (cmp_opcode)

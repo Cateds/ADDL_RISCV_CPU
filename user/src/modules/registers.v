@@ -8,8 +8,8 @@ module registers(
         input wire rst_n,               // 复位信号，低有效
         input wire we,                  // 写使能信号
         input wire [31:0] write_data,   // 写入数据
-        output reg [31:0] rs1_data,   // 源寄存器1数据输出
-        output reg [31:0] rs2_data    // 源寄存器2数据输出
+        output reg [31:0] rs1_data,     // 源寄存器1数据输出
+        output reg [31:0] rs2_data      // 源寄存器2数据输出
     );
 
     reg [31:0] reg_file [0:31]; // 32个寄存器，每个寄存器32位
@@ -26,9 +26,9 @@ module registers(
                 reg_file[rd] <= write_data; // 写入数据
     end
 
-    always @(*) begin
-        read_data1 = reg_file[rs1];
-        read_data2 = reg_file[rs2];
+    always @(rs1, rs2) begin
+        rs1_data <= reg_file[rs1];
+        rs2_data <= reg_file[rs2];
     end
 
 endmodule

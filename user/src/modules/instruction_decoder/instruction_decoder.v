@@ -7,20 +7,20 @@
 
 
 module instr_decoder(
-        input wire [31:0] instruction,
-        output reg [31:0] immediate,
-        output reg [3:0] alu_op,
-        output reg [2:0] cmp_op,
-        output reg [4:0] rd,
-        output reg [4:0] rs1,
-        output reg [4:0] rs2,
-        output reg reg_we,
-        output reg alu_data1_sel,
-        output reg alu_data2_sel,
-        output reg [1:0] mem_op,
-        output reg [2:0] mem_sel,
-        output reg [1:0] wb_sel,
-        output reg pc_jump
+        input wire [31:0] instruction,  // The input instruction to be decoded
+        output reg [31:0] immediate,    // The immediate value extracted from the instruction
+        output reg [3:0] alu_op,        // The ALU operation code
+        output reg [2:0] cmp_op,        // The comparison operation code for Branch Unit
+        output reg [4:0] rd,            // The destination register address
+        output reg [4:0] rs1,           // The first source register address
+        output reg [4:0] rs2,           // The second source register address
+        output reg reg_we,              // Register write enable signal
+        output reg alu_data1_sel,       // ALU data1 source selection signal
+        output reg alu_data2_sel,       // ALU data2 source selection signal
+        output reg [1:0] mem_op,        // Memory operation code
+        output reg [2:0] mem_sel,       // Memory data selection signal
+        output reg [1:0] wb_sel,        // Writeback data selection signal
+        output reg pc_jump              // flag for Jump instruction for Branch Unit
     );
 
     localparam OPCODE_R =       7'b0110011;
@@ -83,7 +83,7 @@ module instr_decoder(
                 alu_data2_sel = `ALU_D2_SEL_IMM;
                 mem_op = I_Load_mem_op;
                 mem_sel = I_Load_mem_sel;
-                wb_sel = `REG_WB_MEM_OUT;
+                wb_sel = `REG_WB_MEM_DAT;
                 pc_jump = 1'b0;
             end
             OPCODE_I_Jump: begin
@@ -178,9 +178,24 @@ module instr_decoder(
                 mem_op = `MEM_OP_NOP;
                 mem_sel = `MEM_SEL_NOP;
                 wb_sel = `REG_WB_NOP;
-                pc_jump = 1'b0; 
+                pc_jump = 1'b0;
                 // branch 标志位 (将pc_adder值写入pc): 由 branch unit 计算
                 // jump 标志位 (将alu_result值写入pc): 此时不设立
+            end
+            default: begin
+                immediate = 32'b0;
+                alu_op = `ALU_NOP;
+                cmp_op = `ALU_CMP_NOP;
+                rd = 5'b0;
+                rs1 = 5'b0;
+                rs2 = 5'b0;
+                reg_we = 1'b0;
+                alu_data1_sel = `ALU_D1_SEL_RS1;
+                alu_data2_sel = `ALU_D2_SEL_RS2;
+                mem_op = `MEM_OP_NOP;
+                mem_sel = `MEM_SEL_NOP;
+                wb_sel = `REG_WB_NOP;
+                pc_jump = 1'b0;
             end
         endcase
     end
@@ -276,7 +291,7 @@ module instr_decoder(
     // * I-type instruction decoder --------------------
 
     // output declaration of module instr_decoder_I_Calc
-    reg [3:0] I_Calc_alu_op;
+    wire [3:0] I_Calc_alu_op;
     wire [4:0] I_Calc_rd;
     wire [4:0] I_Calc_rs1;
     wire [31:0] I_Calc_immediate;

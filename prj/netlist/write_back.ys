@@ -1,3 +1,0 @@
-read_verilog -sv -formal -overwrite {workspace}/user/src/write_back.v
-design -reset-vlog; proc;
-write_json {workspace}/prj/netlist/write_back.json

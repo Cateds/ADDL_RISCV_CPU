@@ -138,6 +138,7 @@ module instr_decoder_I_Env(
     localparam FUNC12_EBREAK = 12'b1;
 
     assign func3 = instruction[14:12];
+    reg [11:0] func12 = instruction[31:20];
 
     always @(*) begin
         case (func3)
@@ -151,7 +152,6 @@ module instr_decoder_I_Env(
                 csr = instruction[31:20];
             end
             FUNC3_ECALL_EBREAK: begin // TODO <----------------------
-                assign func12 = instruction[31:20];
                 case (func12)
                     FUNC12_ECALL:
                         csr_op = `CSR_OP_NOP;

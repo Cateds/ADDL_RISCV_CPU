@@ -5,7 +5,6 @@ module program_counter(
         input wire en,
         input wire clk,
         input wire rst_n,
-        // input wire reset_n,
         input wire [31:0] alu_result,
         input wire [31:0] pc_adder_result,
         output reg [31:0] pc,

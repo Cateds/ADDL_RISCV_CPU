@@ -3,5 +3,5 @@ module pc_adder(
         input wire [31:0] immediate,
         output wire [31:0] pc_adder_result
     );
-    assign pc_adder_result = pc + immediate;
+    assign pc_adder_result = (pc + immediate) & 32'hFFFFFFFC; // 取低两位为0
 endmodule

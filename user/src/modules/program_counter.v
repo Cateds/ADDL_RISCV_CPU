@@ -8,10 +8,11 @@ module program_counter(
         input wire [31:0] alu_result,
         input wire [31:0] pc_adder_result,
         output reg [31:0] pc,
-        output reg [31:0] pc_next
+        output wire [31:0] pc_next
     );
 
     wire [31:0] next_pc_val;
+    assign pc_next = pc + 4; // 计算下一个PC值
 
     always @(*) begin
         case (branch)
@@ -24,17 +25,13 @@ module program_counter(
         endcase
     end
 
-    // 不带分支延迟槽的PC，使用阻塞赋值
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            pc = 32'h0;
-            pc_next = 32'h4;
+            pc <= 32'h0;
         end
         else if (en) begin
-            pc = next_pc_val;
-            pc_next = next_pc_val + 4; // 计算下一个PC值
+            pc <= next_pc_val;
         end
-        // 如果en为0，保持PC不变
     end
 
 endmodule //program_counter

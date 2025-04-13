@@ -4,6 +4,7 @@
 *.view
 # Icarus Verilog 的编译结果和生成线网的临时文件
 prj/*
+.vscode/settings.json
 
 # * ---------- Automatic Generated Git Ignore Settings ---------- *
 

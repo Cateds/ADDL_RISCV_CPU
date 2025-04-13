@@ -10,7 +10,7 @@ module instr_decoder_S(
         output wire [31:0] immediate,
         output wire [3:0] alu_op,
         output wire [1:0] mem_op,
-        output wire [2:0] mem_sel
+        output reg [2:0] mem_sel
     );
 
     localparam FUNC3_SB = 3'b000; // Store Byte

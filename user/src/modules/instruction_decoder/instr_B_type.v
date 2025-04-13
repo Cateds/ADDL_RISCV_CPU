@@ -6,7 +6,7 @@ module instr_decoder_B(
         output reg [2:0] cmp_op,
         output wire [4:0] rs1,
         output wire [4:0] rs2,
-        output reg [31:0] immediate
+        output wire [31:0] immediate
     );
 
     localparam FUNC3_BEQ = 3'h0; // a == b

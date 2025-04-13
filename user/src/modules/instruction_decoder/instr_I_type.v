@@ -69,7 +69,7 @@ module instr_decoder_I_Load(
         output wire [4:0] rd,
         output wire [4:0] rs1,
         output wire [31:0] immediate,
-        output wire [2:0] mem_sel,
+        output reg [2:0] mem_sel,
         output wire [1:0] mem_op
     );
 
@@ -137,8 +137,12 @@ module instr_decoder_I_Env(
     localparam FUNC12_ECALL = 12'b0;
     localparam FUNC12_EBREAK = 12'b1;
 
+    wire [2:0] func3;
     assign func3 = instruction[14:12];
-    reg [11:0] func12 = instruction[31:20];
+    assign func12 = instruction[31:20];
+
+    // TODO: CSR
+    reg [11:0] csr;
 
     always @(*) begin
         case (func3)

@@ -6,7 +6,7 @@ module write_back_unit(
         input wire [31:0] immediate,
         input wire [31:0] mem_data,
         input wire [31:0] pc_next,
-        output wire [31:0] write_data
+        output reg [31:0] write_data
     );
 
     always @(*) begin

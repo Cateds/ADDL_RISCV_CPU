@@ -1,2 +1,80 @@
-module instruction_decode();
+module instruction_decode(
+        // * Clock Sync Signals Connection --------------------
+        input wire clk,
+        input wire rst_n,
+
+        // * Internal Signals Connection --------------------
+        // About Instruction Decode
+        input wire [31:0] instruction,
+        output reg [31:0] immediate,
+        output reg [31:0] rs2_data,
+        output reg [3:0] alu_op,
+        output reg [2:0] cmp_op,
+        output reg [4:0] rd,
+        output reg reg_we,
+        output reg alu_data1_sel,
+        output reg alu_data2_sel,
+        output reg [1:0] mem_op,
+        output reg [2:0] mem_sel,
+        output reg [1:0] wb_sel,
+        output reg pc_jump,
+        // About Register File
+        input wire [4:0] wb_rd,
+        input wire wb_reg_we,
+        input wire [31:0] wb_data,
+        // About PC Adder
+        output wire [31:0] pc_adder_result,
+        // Previous Stage Signals
+        input wire [31:0] pc_in,
+        output wire [31:0] pc_out,
+        input wire [31:0] pc_next_in,
+        input wire [31:0] pc_next_out
+    );
+
+    // 直通信号
+    assign pc_out = pc_in;
+    assign pc_next_out = pc_next_in;
+
+    reg [4:0] rs1;
+    reg [4:0] rs2;
+    reg [31:0] rs1_data;
+
+    instr_decoder
+        u_instr_decoder(
+            .instruction   	(instruction    ),
+            .immediate     	(immediate      ),
+            .alu_op        	(alu_op         ),
+            .cmp_op        	(cmp_op         ),
+            .rd            	(rd             ),
+            .rs1           	(rs1            ),
+            .rs2           	(rs2            ),
+            .reg_we        	(reg_we         ),
+            .alu_data1_sel 	(alu_data1_sel  ),
+            .alu_data2_sel 	(alu_data2_sel  ),
+            .mem_op        	(mem_op         ),
+            .mem_sel       	(mem_sel        ),
+            .wb_sel        	(wb_sel         ),
+            .pc_jump       	(pc_jump        )
+        );
+
+    registers
+        u_registers(
+            .clk        	(clk         ),
+            .rst_n      	(rst_n       ),
+            .rs1        	(rs1         ),
+            .rs2        	(rs2         ),
+            .rd         	(wb_rd       ),
+            .we         	(wb_reg_we   ),
+            .write_data 	(wb_data     ),
+            .rs1_data   	(rs1_data    ),
+            .rs2_data   	(rs2_data    )
+        );
+
+    pc_adder
+        u_pc_adder(
+            .pc              	(pc_in            ),
+            .immediate       	(immediate        ),
+            .pc_adder_result 	(pc_adder_result  )
+        );
+
 endmodule

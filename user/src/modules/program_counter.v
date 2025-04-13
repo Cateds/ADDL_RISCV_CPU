@@ -11,7 +11,7 @@ module program_counter(
         output wire [31:0] pc_next
     );
 
-    wire [31:0] next_pc_val;
+    reg [31:0] next_pc_val;
     assign pc_next = pc + 4; // 计算下一个PC值
 
     always @(*) begin
@@ -26,12 +26,10 @@ module program_counter(
     end
 
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (!rst_n) 
             pc <= 32'h0;
-        end
-        else if (en) begin
-            pc <= next_pc_val;
-        end
+        else if (en) 
+            pc <= next_pc_val; 
     end
 
 endmodule //program_counter

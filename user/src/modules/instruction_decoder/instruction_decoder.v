@@ -37,6 +37,147 @@ module instr_decoder(
 
     assign opcode = instruction[6:0];
 
+    // * R-type instruction decoder --------------------
+    wire [3:0] R_alu_op;
+    wire [4:0] R_rd;
+    wire [4:0] R_rs1;
+    wire [4:0] R_rs2;
+    instr_decoder_R
+        instr_R (
+            .instruction (instruction    ),
+            .alu_op      (R_alu_op       ),
+            .rd          (R_rd           ),
+            .rs1         (R_rs1          ),
+            .rs2         (R_rs2          )
+        );
+
+    // * B-type instruction decoder --------------------
+    wire [3:0] B_alu_op;
+    wire [2:0] B_cmp_op;
+    wire [4:0] B_rs1;
+    wire [4:0] B_rs2;
+    wire [31:0] B_immediate;
+    instr_decoder_B
+        instr_B (
+            .instruction    (instruction    ),
+            .alu_op         (B_alu_op       ),
+            .cmp_op         (B_cmp_op       ),
+            .rs1            (B_rs1          ),
+            .rs2            (B_rs2          ),
+            .immediate      (B_immediate    )
+        );
+
+    // * J-type instruction decoder --------------------
+    wire [31:0] J_immediate;
+    wire [4:0] J_rd;
+    wire [3:0] J_alu_op;
+    instr_decoder_J
+        instr_J(
+            .instruction    (instruction    ),
+            .rd             (J_rd           ),
+            .immediate      (J_immediate    ),
+            .alu_op         (J_alu_op       )
+        );
+
+    // * U-type instruction decoder --------------------
+
+    // output declaration of module instr_decoder_U_LUI
+    wire [4:0] U_LUI_rd;
+    wire [31:0] U_LUI_immediate;
+    instr_decoder_U_LUI
+        instr_U_LUI(
+            .instruction 	(instruction        ),
+            .rd          	(U_LUI_rd           ),
+            .immediate   	(U_LUI_immediate    )
+        );
+
+    // output declaration of module instr_decoder_U_AUIPC
+    wire [4:0] U_AUIPC_rd;
+    wire [31:0] U_AUIPC_immediate;
+    wire [2:0] U_AUIPC_alu_op;
+    instr_decoder_U_AUIPC
+        instr_U_AUIPC(
+            .instruction 	(instruction        ),
+            .rd          	(U_AUIPC_rd         ),
+            .immediate   	(U_AUIPC_immediate  ),
+            .alu_op      	(U_AUIPC_alu_op     )
+        );
+
+    // * S-type instruction decoder --------------------
+
+    // output declaration of module instr_decoder_S
+    wire [4:0] S_rs1;
+    wire [4:0] S_rs2;
+    wire [31:0] S_immediate;
+    wire [3:0] S_alu_op;
+    wire [1:0] S_mem_op;
+    wire [2:0] S_mem_sel;
+
+    instr_decoder_S
+        instr_S(
+            .instruction 	(instruction  ),
+            .rs1         	(S_rs1          ),
+            .rs2         	(S_rs2          ),
+            .immediate   	(S_immediate    ),
+            .alu_op      	(S_alu_op       ),
+            .mem_op      	(S_mem_op       ),
+            .mem_sel     	(S_mem_sel      )
+        );
+
+    // * I-type instruction decoder --------------------
+
+    // output declaration of module instr_decoder_I_Calc
+    wire [3:0] I_Calc_alu_op;
+    wire [4:0] I_Calc_rd;
+    wire [4:0] I_Calc_rs1;
+    wire [31:0] I_Calc_immediate;
+
+    instr_decoder_I_Calc
+        instr_I_Calc(
+            .instruction 	(instruction  ),
+            .alu_op      	(I_Calc_alu_op       ),
+            .rd          	(I_Calc_rd           ),
+            .rs1         	(I_Calc_rs1          ),
+            .immediate   	(I_Calc_immediate    )
+        );
+
+    // output declaration of module instr_decoder_I_Load
+    wire [4:0] I_Load_rd;
+    wire [4:0] I_Load_rs1;
+    wire [31:0] I_Load_immediate;
+    wire [2:0] I_Load_mem_sel;
+    wire [1:0] I_Load_mem_op;
+    wire [3:0] I_Load_alu_op;
+
+    instr_decoder_I_Load
+        instr_I_Load(
+            .instruction 	(instruction  ),
+            .alu_op      	(I_Load_alu_op       ),
+            .rd          	(I_Load_rd           ),
+            .rs1         	(I_Load_rs1          ),
+            .immediate   	(I_Load_immediate    ),
+            .mem_sel     	(I_Load_mem_sel      ),
+            .mem_op      	(I_Load_mem_op       )
+        );
+
+    // output declaration of module instr_decoder_I_Jump
+    wire [4:0] I_Jump_rd;
+    wire [4:0] I_Jump_rs1;
+    wire [31:0] I_Jump_immediate;
+    wire [3:0] I_Jump_alu_op;
+
+    instr_decoder_I_Jump
+        instr_I_Jump(
+            .instruction 	(instruction  ),
+            .alu_op      	(I_Jump_alu_op       ),
+            .rd          	(I_Jump_rd           ),
+            .rs1         	(I_Jump_rs1          ),
+            .immediate   	(I_Jump_immediate    )
+        );
+
+    // I Env 和 I Fence 暂时不支持
+
+    // * Combination Logic --------------------
     always @(*) begin
         case (opcode)
             // * R-type instruction ----------
@@ -199,145 +340,4 @@ module instr_decoder(
             end
         endcase
     end
-
-
-    // * R-type instruction decoder --------------------
-    wire [3:0] R_alu_op;
-    wire [4:0] R_rd;
-    wire [4:0] R_rs1;
-    wire [4:0] R_rs2;
-    instr_decoder_R
-        instr_R (
-            .instruction (instruction    ),
-            .alu_op      (R_alu_op       ),
-            .rd          (R_rd           ),
-            .rs1         (R_rs1          ),
-            .rs2         (R_rs2          )
-        );
-
-    // * B-type instruction decoder --------------------
-    wire [3:0] B_alu_op;
-    wire [2:0] B_cmp_op;
-    wire [4:0] B_rs1;
-    wire [4:0] B_rs2;
-    wire [31:0] B_immediate;
-    instr_decoder_B
-        instr_B (
-            .instruction    (instruction    ),
-            .alu_op         (B_alu_op       ),
-            .cmp_op         (B_cmp_op       ),
-            .rs1            (B_rs1          ),
-            .rs2            (B_rs2          ),
-            .immediate      (B_immediate    )
-        );
-
-    // * J-type instruction decoder --------------------
-    wire [31:0] J_immediate;
-    wire [4:0] J_rd;
-    wire [3:0] J_alu_op;
-    instr_decoder_J
-        instr_J(
-            .instruction    (instruction    ),
-            .rd             (J_rd           ),
-            .immediate      (J_immediate    ),
-            .alu_op         (J_alu_op       )
-        );
-
-    // * U-type instruction decoder --------------------
-
-    // output declaration of module instr_decoder_U_LUI
-    wire [4:0] U_LUI_rd;
-    wire [31:0] U_LUI_immediate;
-    instr_decoder_U_LUI
-        instr_U_LUI(
-            .instruction 	(instruction        ),
-            .rd          	(U_LUI_rd           ),
-            .immediate   	(U_LUI_immediate    )
-        );
-
-    // output declaration of module instr_decoder_U_AUIPC
-    wire [4:0] U_AUIPC_rd;
-    wire [31:0] U_AUIPC_immediate;
-    wire [2:0] U_AUIPC_alu_op;
-    instr_decoder_U_AUIPC
-        instr_U_AUIPC(
-            .instruction 	(instruction        ),
-            .rd          	(U_AUIPC_rd         ),
-            .immediate   	(U_AUIPC_immediate  ),
-            .alu_op      	(U_AUIPC_alu_op     )
-        );
-
-    // * S-type instruction decoder --------------------
-
-    // output declaration of module instr_decoder_S
-    wire [4:0] S_rs1;
-    wire [4:0] S_rs2;
-    wire [31:0] S_immediate;
-    wire [3:0] S_alu_op;
-    wire [1:0] S_mem_op;
-    wire [2:0] S_mem_sel;
-
-    instr_decoder_S
-        instr_S(
-            .instruction 	(instruction  ),
-            .rs1         	(S_rs1          ),
-            .rs2         	(S_rs2          ),
-            .immediate   	(S_immediate    ),
-            .alu_op      	(S_alu_op       ),
-            .mem_op      	(S_mem_op       ),
-            .mem_sel     	(S_mem_sel      )
-        );
-
-    // * I-type instruction decoder --------------------
-
-    // output declaration of module instr_decoder_I_Calc
-    wire [3:0] I_Calc_alu_op;
-    wire [4:0] I_Calc_rd;
-    wire [4:0] I_Calc_rs1;
-    wire [31:0] I_Calc_immediate;
-
-    instr_decoder_I_Calc
-        instr_I_Calc(
-            .instruction 	(instruction  ),
-            .alu_op      	(I_Calc_alu_op       ),
-            .rd          	(I_Calc_rd           ),
-            .rs1         	(I_Calc_rs1          ),
-            .immediate   	(I_Calc_immediate    )
-        );
-
-    // output declaration of module instr_decoder_I_Load
-    wire [4:0] I_Load_rd;
-    wire [4:0] I_Load_rs1;
-    wire [31:0] I_Load_immediate;
-    wire [2:0] I_Load_mem_sel;
-    wire [1:0] I_Load_mem_op;
-    wire [3:0] I_Load_alu_op;
-
-    instr_decoder_I_Load
-        instr_I_Load(
-            .instruction 	(instruction  ),
-            .alu_op      	(I_Load_alu_op       ),
-            .rd          	(I_Load_rd           ),
-            .rs1         	(I_Load_rs1          ),
-            .immediate   	(I_Load_immediate    ),
-            .mem_sel     	(I_Load_mem_sel      ),
-            .mem_op      	(I_Load_mem_op       )
-        );
-
-    // output declaration of module instr_decoder_I_Jump
-    wire [4:0] I_Jump_rd;
-    wire [4:0] I_Jump_rs1;
-    wire [31:0] I_Jump_immediate;
-    wire [3:0] I_Jump_alu_op;
-
-    instr_decoder_I_Jump
-        instr_I_Jump(
-            .instruction 	(instruction  ),
-            .alu_op      	(I_Jump_alu_op       ),
-            .rd          	(I_Jump_rd           ),
-            .rs1         	(I_Jump_rs1          ),
-            .immediate   	(I_Jump_immediate    )
-        );
-
-    // I Env 和 I Fence 暂时不支持
 endmodule

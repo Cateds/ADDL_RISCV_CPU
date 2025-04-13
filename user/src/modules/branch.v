@@ -5,7 +5,7 @@ module branch_unit(
         input wire [31:0] alu_result,
         input wire [2:0] cmp_opcode,
         input wire pc_jump,
-        output reg [1:0] branch
+        output wire [1:0] branch
     );
 
     assign zero_flag = (alu_result == 32'h0); // alu_opcode: ALU_XOR

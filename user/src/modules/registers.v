@@ -26,9 +26,9 @@ module registers(
                 reg_file[rd] <= write_data; // 写入数据
     end
 
-    always @(rs1, rs2) begin
-        rs1_data <= reg_file[rs1];
-        rs2_data <= reg_file[rs2];
+    always @(*) begin
+        rs1_data = reg_file[rs1];
+        rs2_data = reg_file[rs2];
     end
 
 endmodule

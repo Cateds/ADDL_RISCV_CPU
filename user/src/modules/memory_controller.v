@@ -2,9 +2,9 @@ module memory_ctrl(
         // Internal signals
         input wire [1:0] mem_op,
         input wire [2:0] mem_sel,
-        input wire [31:0] address,
-        input wire [31:0] write_data,
-        output wire [31:0] read_data,
+        input wire [31:0] mem_addr,
+        input wire [31:0] mem_wdata,
+        output wire [31:0] mem_rdata,
         output wire mem_ready,
 
         // External signals

@@ -34,12 +34,7 @@ module memory_operation(
         inout wire [31:0] ram_data
     );
 
-    assign wb_sel_out = wb_sel_in;
-    assign alu_result_out = alu_result_in;
-    assign immediate_out = immediate_in;
-    assign pc_next_out = pc_next_in;
-    assign rd_out = rd_in;
-    assign reg_we_out = reg_we_in;
+    assign w
 
     memory_ctrl
         u_memory_ctrl(

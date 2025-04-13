@@ -4,7 +4,7 @@ module execute_unit(
         input wire rst_n,
 
         // * Internal Signals Connection --------------------
-        // About ALU
+        // ----- ALU -----
         input wire [31:0] rs1_data,
         input wire [31:0] rs2_data,
         input wire [31:0] immediate,
@@ -13,11 +13,11 @@ module execute_unit(
         input wire alu_data1_sel,
         input wire alu_data2_sel,
         output reg [31:0] alu_result,
-        // About Branch Unit
+        // ----- Branch Unit -----
         input wire [2:0] cmp_op,
         input wire pc_jump,
         output reg [1:0] branch,
-        // Previous Stage Signals
+        // ----- Previous Stage Signals -----
         input wire [31:0] pc_next_in,
         output wire [31:0] pc_next_out,
         input wire [1:0] mem_op_in,
@@ -29,7 +29,11 @@ module execute_unit(
         input wire [4:0] rd_in,
         output wire [4:0] rd_out,
         input wire reg_we_in,
-        output wire reg_we_out
+        output wire reg_we_out,
+        input wire [31:0] pc_adder_result_in,
+        output wire [31:0] pc_adder_result_out,
+        output wire [31:0] rs2_data_out,
+        output wire [31:0] immediate_out
     );
 
     assign pc_next_out = pc_next_in;
@@ -38,6 +42,9 @@ module execute_unit(
     assign wb_sel_out = wb_sel_in;
     assign rd_out = rd_in;
     assign reg_we_out = reg_we_in;
+    assign pc_adder_result_out = pc_adder_result_in;
+    assign rs2_data_out = rs2_data;
+    assign immediate_out = immediate;
 
     alu u_alu(
             .alu_op     	(alu_op         ),

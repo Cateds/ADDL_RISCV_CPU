@@ -14,8 +14,7 @@ module instruction_fetch(
 
         // * External Signals Connection --------------------
         output wire [31:0] rom_addr,
-        input wire [31:0] rom_data,
-        output wire rom_en
+        input wire [31:0] rom_data
     );
 
     // output declaration of module program_counter
@@ -33,5 +32,4 @@ module instruction_fetch(
 
     assign rom_addr = pc; // PC作为ROM的地址
     assign instruction = rom_data; // 从ROM中读取指令
-    assign rom_en = 1'b1;
 endmodule

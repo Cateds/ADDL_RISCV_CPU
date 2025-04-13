@@ -5,8 +5,10 @@ module instruction_decode(
 
         // * Internal Signals Connection --------------------
         // About Instruction Decode
+        input wire [31:0] pc,
         input wire [31:0] instruction,
         output reg [31:0] immediate,
+        output reg [31:0] rs1_data,
         output reg [31:0] rs2_data,
         output reg [3:0] alu_op,
         output reg [2:0] cmp_op,
@@ -25,19 +27,17 @@ module instruction_decode(
         // About PC Adder
         output wire [31:0] pc_adder_result,
         // Previous Stage Signals
-        input wire [31:0] pc_in,
         output wire [31:0] pc_out,
         input wire [31:0] pc_next_in,
         input wire [31:0] pc_next_out
     );
 
     // 直通信号
-    assign pc_out = pc_in;
+    assign pc_out = pc;
     assign pc_next_out = pc_next_in;
 
     reg [4:0] rs1;
     reg [4:0] rs2;
-    reg [31:0] rs1_data;
 
     instr_decoder
         u_instr_decoder(
@@ -72,7 +72,7 @@ module instruction_decode(
 
     pc_adder
         u_pc_adder(
-            .pc              	(pc_in            ),
+            .pc              	(pc               ),
             .immediate       	(immediate        ),
             .pc_adder_result 	(pc_adder_result  )
         );

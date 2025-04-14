@@ -6,6 +6,8 @@
 prj/*
 # 项目级 VSCode 设置
 .vscode/settings.json
+# 代码行数统计插件 统计结果
+/.VSCodeCounter
 
 # * ---------- Automatic Generated Git Ignore Settings ---------- *
 

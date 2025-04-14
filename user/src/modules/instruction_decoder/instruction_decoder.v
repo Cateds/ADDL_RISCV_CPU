@@ -1,11 +1,3 @@
-`include "../../../inc/alu_opcode.v"
-`include "../../../inc/alu_mux.v"
-`include "../../../inc/registers_writeback.v"
-`include "../../../inc/memory_opcode.v"
-`include "../../../inc/memory_select.v"
-`include "../../../inc/registers_writeback.v"
-
-
 module instr_decoder(
         input wire [31:0] instruction,  // The input instruction to be decoded
         output reg [31:0] immediate,    // The immediate value extracted from the instruction
@@ -22,6 +14,13 @@ module instr_decoder(
         output reg [1:0] wb_sel,        // Writeback data selection signal
         output reg pc_jump              // flag for Jump instruction for Branch Unit
     );
+
+    ALU_OP_ENUM     alu_op_enum();
+    ALU_CMP_OP_ENUM cmp_op_enum();
+    ALU_MUX_ENUM    alu_mux_enum();
+    WB_SEL_ENUM     wb_sel_enum();
+    MEM_OP_ENUM     mem_op_enum();
+    MEM_SEL_ENUM    mem_sel_enum();
 
     localparam OPCODE_R =       7'b0110011;
     localparam OPCODE_I_Calc =  7'b0010011;
@@ -184,125 +183,125 @@ module instr_decoder(
             OPCODE_R: begin
                 immediate = 32'b0;
                 alu_op = R_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = R_rd;
                 rs1 = R_rs1;
                 rs2 = R_rs2;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_RS2;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_ALU_OUT;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_RS2;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.ALU_OUT;
                 pc_jump = 1'b0;
             end
             // * I-type instruction ----------
             OPCODE_I_Calc: begin
                 immediate = I_Calc_immediate;
                 alu_op = I_Calc_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = I_Calc_rd;
                 rs1 = I_Calc_rs1;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_ALU_OUT;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.ALU_OUT;
                 pc_jump = 1'b0;
             end
             OPCODE_I_Load: begin
                 immediate = I_Load_immediate;
                 alu_op = I_Load_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = I_Load_rd;
                 rs1 = I_Load_rs1;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
                 mem_op = I_Load_mem_op;
                 mem_sel = I_Load_mem_sel;
-                wb_sel = `REG_WB_MEM_DAT;
+                wb_sel = wb_sel_enum.MEM_DAT;
                 pc_jump = 1'b0;
             end
             OPCODE_I_Jump: begin
                 immediate = I_Jump_immediate;
                 alu_op = I_Jump_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = I_Jump_rd;
                 rs1 = I_Jump_rs1;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_PC_NEXT;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.PC_NEXT;
                 pc_jump = 1'b1;
             end
             // * S-type instruction ----------
             OPCODE_S: begin
                 immediate = S_immediate;
                 alu_op = S_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = 5'b0;
                 rs1 = S_rs1;
                 rs2 = S_rs2;
                 reg_we = 1'b0;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
                 mem_op = S_mem_op;
                 mem_sel = S_mem_sel;
-                wb_sel = `REG_WB_NOP;
+                wb_sel = wb_sel_enum.NOP;
                 pc_jump = 1'b0;
             end
             // * U-type instruction ----------
             OPCODE_U_LUI: begin
                 immediate = U_LUI_immediate;
-                alu_op = `ALU_NOP;
-                cmp_op = `ALU_CMP_NOP;
+                alu_op = alu_op_enum.NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = U_LUI_rd;
                 rs1 = 5'b0;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_RS2;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_IMM_DAT;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_RS2;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.IMM_DAT;
                 pc_jump = 1'b0;
             end
             OPCODE_U_AUIPC: begin
                 immediate = U_AUIPC_immediate;
                 alu_op = U_AUIPC_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = U_AUIPC_rd;
                 rs1 = 5'b0;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_PC;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_ALU_OUT;
+                alu_data1_sel = alu_mux_enum.D1_PC;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.ALU_OUT;
                 pc_jump = 1'b0;
             end
             // * J-type instruction ----------
             OPCODE_J: begin
                 immediate = J_immediate;
                 alu_op = J_alu_op;
-                cmp_op = `ALU_CMP_NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = J_rd;
                 rs1 = 5'b0;
                 rs2 = 5'b0;
                 reg_we = 1'b1;
-                alu_data1_sel = `ALU_D1_SEL_PC;
-                alu_data2_sel = `ALU_D2_SEL_IMM;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_PC_NEXT;
+                alu_data1_sel = alu_mux_enum.D1_PC;
+                alu_data2_sel = alu_mux_enum.D2_IMM;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.PC_NEXT;
                 pc_jump = 1'b1;
             end
             // * B-type instruction ----------
@@ -314,28 +313,28 @@ module instr_decoder(
                 rs1 = B_rs1;
                 rs2 = B_rs2;
                 reg_we = 1'b0;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_RS2;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_NOP;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_RS2;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.NOP;
                 pc_jump = 1'b0;
                 // branch 标志位 (将pc_adder值写入pc): 由 branch unit 计算
                 // jump 标志位 (将alu_result值写入pc): 此时不设立
             end
             default: begin
                 immediate = 32'b0;
-                alu_op = `ALU_NOP;
-                cmp_op = `ALU_CMP_NOP;
+                alu_op = alu_op_enum.NOP;
+                cmp_op = cmp_op_enum.NOP;
                 rd = 5'b0;
                 rs1 = 5'b0;
                 rs2 = 5'b0;
                 reg_we = 1'b0;
-                alu_data1_sel = `ALU_D1_SEL_RS1;
-                alu_data2_sel = `ALU_D2_SEL_RS2;
-                mem_op = `MEM_OP_NOP;
-                mem_sel = `MEM_SEL_NOP;
-                wb_sel = `REG_WB_NOP;
+                alu_data1_sel = alu_mux_enum.D1_RS1;
+                alu_data2_sel = alu_mux_enum.D2_RS2;
+                mem_op = mem_op_enum.NOP;
+                mem_sel = mem_sel_enum.NOP;
+                wb_sel = wb_sel_enum.NOP;
                 pc_jump = 1'b0;
             end
         endcase

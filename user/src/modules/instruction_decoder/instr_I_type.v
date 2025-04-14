@@ -1,7 +1,3 @@
-`include "../../../inc/memory_select.v"
-`include "../../../inc/memory_opcode.v"
-`include "../../../inc/CSR_opcode.v"
-`include "../../../inc/alu_opcode.v"
 module instr_decoder_I_Calc(
         input wire [31:0] instruction,
         output reg [3:0] alu_op,
@@ -9,6 +5,8 @@ module instr_decoder_I_Calc(
         output wire [4:0] rs1,
         output wire [31:0] immediate
     );
+
+    ALU_OP_ENUM alu_op_enum();
 
     localparam FUNC3_ADDI = 3'b000;
     localparam FUNC3_SLTI = 3'b010;
@@ -33,30 +31,30 @@ module instr_decoder_I_Calc(
     always @(*) begin
         case (func3)
             FUNC3_ADDI:
-                alu_op = `ALU_ADD;
+                alu_op = alu_op_enum.ADD;
             FUNC3_SLTI:
-                alu_op = `ALU_SLT;
+                alu_op = alu_op_enum.SLT;
             FUNC3_SLTIU:
-                alu_op = `ALU_SLTU;
+                alu_op = alu_op_enum.SLTU;
             FUNC3_XORI:
-                alu_op = `ALU_XOR;
+                alu_op = alu_op_enum.XOR;
             FUNC3_ORI:
-                alu_op = `ALU_OR;
+                alu_op = alu_op_enum.OR;
             FUNC3_ANDI:
-                alu_op = `ALU_AND;
+                alu_op = alu_op_enum.AND;
             FUNC3_SLLI:
-                alu_op = `ALU_SLL;
+                alu_op = alu_op_enum.SLL;
             FUNC3_SRLI_SRAI:
             case (func7)
                 FUNC7_Former:
-                    alu_op = `ALU_SRL;
+                    alu_op = alu_op_enum.SRL;
                 FUNC7_Latter:
-                    alu_op = `ALU_SRA;
+                    alu_op = alu_op_enum.SRA;
                 default:
-                    alu_op = `ALU_NOP;
+                    alu_op = alu_op_enum.NOP;
             endcase
             default:
-                alu_op = `ALU_NOP;
+                alu_op = alu_op_enum.NOP;
         endcase
     end
 
@@ -73,6 +71,10 @@ module instr_decoder_I_Load(
         output wire [1:0] mem_op
     );
 
+    MEM_SEL_ENUM    mem_sel_enum();
+    MEM_OP_ENUM     mem_op_enum();
+    ALU_OP_ENUM     alu_op_enum();
+
     localparam FUNC3_LB = 3'b000; // Load Byte
     localparam FUNC3_LH = 3'b001; // Load Halfword
     localparam FUNC3_LW = 3'b010; // Load Word
@@ -83,23 +85,23 @@ module instr_decoder_I_Load(
     assign rs1 = instruction[19:15];
     assign rd = instruction[11:7];
     assign func3 = instruction[14:12];
-    assign mem_op = `MEM_OP_LOAD;
-    assign alu_op = `ALU_ADD;
+    assign mem_op = mem_op_enum.LOAD;
+    assign alu_op = alu_op_enum.ADD;
 
     always @(*) begin
         case (func3)
             FUNC3_LB:
-                mem_sel = `MEM_SEL_BYTE_SIGNED;
+                mem_sel = mem_sel_enum.BYTE_SIGNED;
             FUNC3_LH:
-                mem_sel = `MEM_SEL_HALF_SIGNED;
+                mem_sel = mem_sel_enum.HALF_SIGNED;
             FUNC3_LW:
-                mem_sel = `MEM_SEL_WORD;
+                mem_sel = mem_sel_enum.WORD;
             FUNC3_LBU:
-                mem_sel = `MEM_SEL_BYTE_UNSIGNED;
+                mem_sel = mem_sel_enum.BYTE_UNSIGNED;
             FUNC3_LHU:
-                mem_sel = `MEM_SEL_HALF_UNSIGNED;
+                mem_sel = mem_sel_enum.HALF_UNSIGNED;
             default:
-                mem_sel = `MEM_SEL_NOP;
+                mem_sel = mem_sel_enum.NOP;
         endcase
     end
 endmodule
@@ -111,10 +113,13 @@ module instr_decoder_I_Jump(
         output wire [4:0] rs1,
         output wire [31:0] immediate
     );
+
+    ALU_OP_ENUM alu_op_enum();
+
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
     assign immediate = {{20{instruction[31]}}, instruction[31:20]};
-    assign alu_op = `ALU_ADD;
+    assign alu_op = alu_op_enum.ADD;
 endmodule
 
 module instr_decoder_I_Env(
@@ -125,6 +130,8 @@ module instr_decoder_I_Env(
         output reg [1:0] csr_op,
         output reg is_immediate
     );
+
+    CSR_OP_ENUM csr_op_enum();
 
     localparam FUNC3_CSRRW = 3'b001;    // CSR Read and Write
     localparam FUNC3_CSRRS = 3'b010;    // CSR Read and Set
@@ -158,15 +165,15 @@ module instr_decoder_I_Env(
             FUNC3_ECALL_EBREAK: begin // TODO <----------------------
                 case (func12)
                     FUNC12_ECALL:
-                        csr_op = `CSR_OP_NOP;
+                        csr_op = csr_op_enum.NOP;
                     FUNC12_EBREAK:
-                        csr_op = `CSR_OP_NOP;
+                        csr_op = csr_op_enum.NOP;
                     default:
-                        csr_op = `CSR_OP_NOP;
+                        csr_op = csr_op_enum.NOP;
                 endcase
             end // TODO <--------------------------------------------
             default: begin
-                csr_op = `CSR_OP_NOP;
+                csr_op = csr_op_enum.NOP;
                 is_immediate = 1'b0;
                 immediate = 32'b0;
                 rd = 5'b0;

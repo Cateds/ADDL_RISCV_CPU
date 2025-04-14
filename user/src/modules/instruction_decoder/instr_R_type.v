@@ -1,5 +1,3 @@
-`include "../../../inc/alu_opcode.v"
-
 module instr_decoder_R(
         input wire [31:0] instruction,  // 输入指令
         output reg [3:0] alu_op, // ALU 操作码
@@ -7,6 +5,8 @@ module instr_decoder_R(
         output wire [4:0] rs1,  // 源寄存器 1
         output wire [4:0] rs2   // 源寄存器 2
     );
+
+    ALU_OP_ENUM alu_op_enum();
 
     localparam FUNC3_ADD_SUB = 3'b000;
     localparam FUNC3_SLL = 3'b001;
@@ -30,33 +30,33 @@ module instr_decoder_R(
             FUNC3_ADD_SUB: begin
                 case (func7)
                     FUNC7_Former:
-                        alu_op = `ALU_ADD;
+                        alu_op = alu_op_enum.ADD;
                     FUNC7_Latter:
-                        alu_op = `ALU_SUB; // ALU_SUB
+                        alu_op = alu_op_enum.SUB; // ALU_SUB
                 endcase
             end
             FUNC3_SLL:
-                alu_op = `ALU_SLL; // ALU_SLL
+                alu_op = alu_op_enum.SLL; // ALU_SLL
             FUNC3_SLT:
-                alu_op = `ALU_SLT; // ALU_SLT
+                alu_op = alu_op_enum.SLT; // ALU_SLT
             FUNC3_SLTU:
-                alu_op = `ALU_SLTU; // ALU_SLTU
+                alu_op = alu_op_enum.SLTU; // ALU_SLTU
             FUNC3_XOR:
-                alu_op = `ALU_XOR; // ALU_XOR
+                alu_op = alu_op_enum.XOR; // ALU_XOR
             FUNC3_SRL_SRA: begin
                 case (func7)
                     FUNC7_Former:
-                        alu_op = `ALU_SRL; // ALU_SRL
+                        alu_op = alu_op_enum.SRL; // ALU_SRL
                     FUNC7_Latter:
-                        alu_op = `ALU_SRA; // ALU_SRA
+                        alu_op = alu_op_enum.SRA; // ALU_SRA
                 endcase
             end
             FUNC3_OR:
-                alu_op = `ALU_OR; // ALU_OR
+                alu_op = alu_op_enum.OR; // ALU_OR
             FUNC3_AND:
-                alu_op = `ALU_AND; // ALU_AND
+                alu_op = alu_op_enum.AND; // ALU_AND
             default:
-                alu_op = `ALU_NOP; // ALU_NOP
+                alu_op = alu_op_enum.NOP; // ALU_NOP
         endcase
     end
 

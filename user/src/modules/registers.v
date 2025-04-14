@@ -1,5 +1,3 @@
-`include "../../inc/registers_writeback.v"
-
 module registers(
         input wire [4:0] rs1,           // 源寄存器1
         input wire [4:0] rs2,           // 源寄存器2

@@ -116,8 +116,8 @@ module cpu_core(
             .pc_next_out     	(ID_pc_next)
         );
 
-    execute_unit
-        u_execute_unit(
+    execute
+        u_execute(
             // * Clock Sync ----------
             .clk           	        (clk),
             .rst_n         	        (rst_n),

@@ -19,7 +19,7 @@ module instruction_decode(
         output reg [1:0] mem_op,
         output reg [2:0] mem_sel,
         output reg [1:0] wb_sel,
-        output reg pc_jump,
+        output reg branch_jump,
         // About Register File
         input wire [4:0] wb_rd,
         input wire wb_reg_we,
@@ -41,40 +41,40 @@ module instruction_decode(
 
     instr_decoder
         u_instr_decoder(
-            .instruction   	(instruction    ),
-            .immediate     	(immediate      ),
-            .alu_op        	(alu_op         ),
-            .cmp_op        	(cmp_op         ),
-            .rd            	(rd             ),
-            .rs1           	(rs1            ),
-            .rs2           	(rs2            ),
-            .reg_we        	(reg_we         ),
-            .alu_data1_sel 	(alu_data1_sel  ),
-            .alu_data2_sel 	(alu_data2_sel  ),
-            .mem_op        	(mem_op         ),
-            .mem_sel       	(mem_sel        ),
-            .wb_sel        	(wb_sel         ),
-            .pc_jump       	(pc_jump        )
+            .instruction     (instruction),
+            .immediate       (immediate),
+            .alu_op          (alu_op),
+            .cmp_op          (cmp_op),
+            .rd              (rd),
+            .rs1             (rs1),
+            .rs2             (rs2),
+            .reg_we          (reg_we),
+            .alu_data1_sel   (alu_data1_sel),
+            .alu_data2_sel   (alu_data2_sel),
+            .mem_op          (mem_op),
+            .mem_sel         (mem_sel),
+            .wb_sel          (wb_sel),
+            .branch_jump     (branch_jump)
         );
 
     registers
         u_registers(
-            .clk        	(clk         ),
-            .rst_n      	(rst_n       ),
-            .rs1        	(rs1         ),
-            .rs2        	(rs2         ),
-            .rd         	(wb_rd       ),
-            .we         	(wb_reg_we   ),
-            .write_data 	(wb_data     ),
-            .rs1_data   	(rs1_data    ),
-            .rs2_data   	(rs2_data    )
+            .clk          (clk),
+            .rst_n        (rst_n),
+            .rs1          (rs1),
+            .rs2          (rs2),
+            .rd           (wb_rd),
+            .we           (wb_reg_we),
+            .write_data   (wb_data),
+            .rs1_data     (rs1_data),
+            .rs2_data     (rs2_data)
         );
 
     pc_adder
         u_pc_adder(
-            .pc              	(pc               ),
-            .immediate       	(immediate        ),
-            .pc_adder_result 	(pc_adder_result  )
+            .pc                (pc),
+            .immediate         (immediate),
+            .pc_adder_result   (pc_adder_result)
         );
 
 endmodule

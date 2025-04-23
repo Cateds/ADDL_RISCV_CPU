@@ -1,7 +1,7 @@
 module branch_unit(
         input wire [31:0] alu_result,
         input wire [2:0] cmp_opcode,
-        input wire pc_jump,
+        input wire branch_jump,
         output wire [1:0] branch
     );
 
@@ -12,7 +12,7 @@ module branch_unit(
     assign slt_result = alu_result[0]; // alu_opcode: ALU_SLT
     assign sltu_result = alu_result[0]; // alu_opcode: ALU_SLTU
     reg branch_flag;
-    assign branch = pc_jump ? pc_mux_enum.ALU_OUT : {1'b0, branch_flag};
+    assign branch = branch_jump ? pc_mux_enum.ALU_OUT : {1'b0, branch_flag};
 
     always @(*) begin
         case (cmp_opcode)

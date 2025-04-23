@@ -15,7 +15,7 @@ module execute(
         output reg [31:0] alu_result,
         // ----- Branch Unit -----
         input wire [2:0] cmp_op,
-        input wire pc_jump,
+        input wire branch_jump,
         output reg [1:0] branch,
         // ----- Previous Stage Signals -----
         input wire [31:0] pc_next_in,
@@ -61,7 +61,7 @@ module execute(
         u_branch_unit(
             .alu_result 	(alu_result  ),
             .cmp_opcode 	(cmp_op      ),
-            .pc_jump    	(pc_jump     ),
+            .branch_jump    (branch_jump     ),
             .branch     	(branch      )
         );
 

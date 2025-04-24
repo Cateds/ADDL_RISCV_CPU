@@ -12,7 +12,7 @@ module instr_decoder(
         output reg [1:0] mem_op,        // Memory operation code
         output reg [2:0] mem_sel,       // Memory data selection signal
         output reg [1:0] wb_sel,        // Writeback data selection signal
-        output reg pc_jump              // flag for Jump instruction for Branch Unit
+        output reg branch_jump              // flag for Jump instruction for Branch Unit
     );
 
     ALU_OP_ENUM     alu_op_enum();
@@ -193,7 +193,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.ALU_OUT;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             // * I-type instruction ----------
             OPCODE_I_Calc: begin
@@ -209,7 +209,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.ALU_OUT;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             OPCODE_I_Load: begin
                 immediate = I_Load_immediate;
@@ -224,7 +224,7 @@ module instr_decoder(
                 mem_op = I_Load_mem_op;
                 mem_sel = I_Load_mem_sel;
                 wb_sel = wb_sel_enum.MEM_DAT;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             OPCODE_I_Jump: begin
                 immediate = I_Jump_immediate;
@@ -239,7 +239,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.PC_NEXT;
-                pc_jump = 1'b1;
+                branch_jump = 1'b1;
             end
             // * S-type instruction ----------
             OPCODE_S: begin
@@ -255,7 +255,7 @@ module instr_decoder(
                 mem_op = S_mem_op;
                 mem_sel = S_mem_sel;
                 wb_sel = wb_sel_enum.NOP;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             // * U-type instruction ----------
             OPCODE_U_LUI: begin
@@ -271,7 +271,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.IMM_DAT;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             OPCODE_U_AUIPC: begin
                 immediate = U_AUIPC_immediate;
@@ -286,7 +286,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.ALU_OUT;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
             // * J-type instruction ----------
             OPCODE_J: begin
@@ -302,7 +302,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.PC_NEXT;
-                pc_jump = 1'b1;
+                branch_jump = 1'b1;
             end
             // * B-type instruction ----------
             OPCODE_B: begin
@@ -318,7 +318,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.NOP;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
                 // branch 标志位 (将pc_adder值写入pc): 由 branch unit 计算
                 // jump 标志位 (将alu_result值写入pc): 此时不设立
             end
@@ -335,7 +335,7 @@ module instr_decoder(
                 mem_op = mem_op_enum.NOP;
                 mem_sel = mem_sel_enum.NOP;
                 wb_sel = wb_sel_enum.NOP;
-                pc_jump = 1'b0;
+                branch_jump = 1'b0;
             end
         endcase
     end

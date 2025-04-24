@@ -117,20 +117,20 @@ module tb_pc_mips();
     
     // Task to check outputs and display results
     task check_outputs;
-        input [200:0] test_case;
+        input [1023:0] test_case;
         begin
-            $display("Test case: %s", test_case);
+            $display("Test case: %0s", test_case);
             
             if (pc === expected_pc) begin
-                $display("PASS: PC = %h (expected: %h)", pc, expected_pc);
+                $display("PASS: PC = %0h (expected: %0h)", pc, expected_pc);
             end else begin
-                $display("FAIL: PC = %h (expected: %h)", pc, expected_pc);
+                $display("FAIL: PC = %0h (expected: %0h)", pc, expected_pc);
             end
             
             if (pc_plus_4 === expected_pc_plus_4) begin
-                $display("PASS: PC+4 = %h (expected: %h)", pc_plus_4, expected_pc_plus_4);
+                $display("PASS: PC+4 = %0h (expected: %0h)", pc_plus_4, expected_pc_plus_4);
             end else begin
-                $display("FAIL: PC+4 = %h (expected: %h)", pc_plus_4, expected_pc_plus_4);
+                $display("FAIL: PC+4 = %0h (expected: %0h)", pc_plus_4, expected_pc_plus_4);
             end
             
             $display("------------------------------------");

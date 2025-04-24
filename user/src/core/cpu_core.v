@@ -1,12 +1,12 @@
 module cpu_core(
         // * Clock Sync Signals Connection --------------------
-        input wire clk,
-        input wire rst_n,
+        input clk,
+        input rst_n,
 
         // * External Signals Connection --------------------
         // ----- Instruction Memory -----
-        output wire [31:0] rom_addr,
-        input wire [31:0] rom_data,
+        output [31:0] rom_addr,
+        input [31:0] rom_data,
         // ----- Bus / Memory Access -----
         output bus_re,
         output [3:0] bus_we,

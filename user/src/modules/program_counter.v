@@ -1,12 +1,12 @@
 module program_counter(
-        input wire [1:0] branch,
-        input wire en,
-        input wire clk,
-        input wire rst_n,
-        input wire [31:0] alu_result,
-        input wire [31:0] pc_adder_result,
-        output reg [31:0] pc,
-        output wire [31:0] pc_next
+        input wire [1:0] branch,    // Whether to branch or not, and MUX of branch addr
+        input wire en,  // Enable signal
+        input wire clk, // Clock signal
+        input wire rst_n,   // Reset signal, active low
+        input wire [31:0] alu_result,   // The result of the ALU operation
+        input wire [31:0] pc_adder_result,  // The result of the PC adder (PC + Imm)
+        output reg [31:0] pc,   // Current PC value
+        output wire [31:0] pc_next  // PC + 4
     );
 
     PC_MUX_ENUM pc_mux_enum();
@@ -26,10 +26,10 @@ module program_counter(
     end
 
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) 
+        if (!rst_n)
             pc <= 32'h0;
-        else if (en) 
-            pc <= next_pc_val; 
+        else if (en)
+            pc <= next_pc_val;
     end
 
 endmodule //program_counter

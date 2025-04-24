@@ -6,7 +6,7 @@ module alu(
         input wire [31:0] rs2_data,
         input wire [31:0] immediate,
         input wire [31:0] pc,
-        output reg [31:0] alu_result
+        output wire [31:0] alu_result
     );
 
     // output declaration of module alu_input_mux

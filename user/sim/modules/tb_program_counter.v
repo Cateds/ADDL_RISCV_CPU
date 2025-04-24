@@ -1,7 +1,10 @@
 `timescale 1ns/1ps
-`include "../../inc/pc_mux.v"
+`include "../test_utils.vh"
 
 module tb_program_counter();
+
+    PC_MUX_ENUM pc_mux_enum();
+
     // 定义测试信号
     reg [1:0] branch;
     reg en;
@@ -11,97 +14,97 @@ module tb_program_counter();
     reg [31:0] pc_adder_result;
     wire [31:0] pc;
     wire [31:0] pc_next;
-    
+
     // 期望输出
     reg [31:0] expected_pc;
-    
+
     // 实例化被测模块
-    program_counter dut(
-        .branch(branch),
-        .en(en),
-        .clk(clk),
-        .rst_n(rst_n),
-        .alu_result(alu_result),
-        .pc_adder_result(pc_adder_result),
-        .pc(pc),
-        .pc_next(pc_next)
-    );
-    
+    program_counter
+        dut(
+            .branch(branch),
+            .en(en),
+            .clk(clk),
+            .rst_n(rst_n),
+            .alu_result(alu_result),
+            .pc_adder_result(pc_adder_result),
+            .pc(pc),
+            .pc_next(pc_next)
+        );
+
+    task check_result;
+        parameter BUFFER_LEN = 128;
+        input [BUFFER_LEN*8-1:0] description;
+        begin
+            $display("Test: %0s (@time: %0t)", description, $time);
+            `PRINT_TEST_HEX("PC", pc, expected_pc);
+            `PRINT_TEST_HEX("PC Next", pc_next, expected_pc + 4);
+        end
+    endtask
+
     // 生成时钟信号
     always #5 clk = ~clk;
-    
+
     // 初始化测试
     initial begin
         // 打开波形文件
         $dumpfile("tb_program_counter.vcd");
         $dumpvars(0, tb_program_counter);
-        
-        // 初始化信号
+
         clk = 0;
         rst_n = 0;
         en = 1;
-        branch = 2'b00;  // 默认PC+4
-        alu_result = 32'h1000;
-        pc_adder_result = 32'h2000;
-        expected_pc = 32'h0;  // 复位后PC应为0
-        
-        // 检查复位状态
+        alu_result = 128;
+        pc_adder_result = 192;
+        branch = pc_mux_enum.NOP;
+
         #10;
+        expected_pc = 0;
+        check_result("Initial State");
+        
         rst_n = 1;
-        check_result("复位后状态");
-        
-        // 测试默认情况 (PC+4)
         #10;
-        expected_pc = 32'h4;  // PC应该增加4
-        check_result("默认PC+4");
-        
-        // 测试ALU输出
+        expected_pc = 4;
+        check_result("Normal (+4)");
+
         #10;
-        branch = `PC_MUX_ALU_OUT;
-        expected_pc = alu_result;
-        check_result("ALU输出选择");
-        
-        // 测试PC_ADDER输出
+        expected_pc = 8;
+        check_result("Normal (+4)");
+
+        branch = pc_mux_enum.PC_ADDER;
         #10;
-        branch = `PC_MUX_PC_ADDER;
         expected_pc = pc_adder_result;
-        check_result("PC_ADDER输出选择");
-        
-        // 测试禁用状态
+        check_result("Branch to PC_ADDER");
+
+        branch = pc_mux_enum.NOP;
         #10;
+        expected_pc = expected_pc + 4;
+        check_result("Normal (+4)");
+
+        branch = pc_mux_enum.ALU_OUT;
+        #10;
+        expected_pc = alu_result;
+        check_result("Branch to ALU_OUT");
+
+        branch = pc_mux_enum.NOP;
+        #10;
+        expected_pc = expected_pc + 4;
+        check_result("Normal (+4)");
+
         en = 0;
-        branch = 2'b00;  // 默认PC+4
         #10;
-        check_result("禁用状态 (PC不应变化)");
-        
-        // 恢复启用状态
-        #10;
+        check_result("Disabled (+0)");
+
         en = 1;
         #10;
-        expected_pc = pc + 4;
-        check_result("恢复启用状态");
-        
-        // 结束仿真
+        expected_pc = expected_pc + 4;
+        check_result("Enabled (+4)");
+
         #10;
-        $display("测试完成!");
+        $display("Simulation finished.");
         $finish;
     end
-    
+
     // 检查结果
-    task check_result;
-        input [100:0] test_case;
-        begin
-            #1; // 等待PC更新
-            $display("测试用例: %s", test_case);
-            $display("时间 = %0t, PC实际值 = %h, PC期望值 = %h, PC_NEXT = %h", 
-                     $time, pc, expected_pc, pc_next);
-            if (pc !== expected_pc) begin
-                $display("错误: 期望PC = %h, 实际PC = %h", expected_pc, pc);
-            end else begin
-                $display("测试通过");
-            end
-            $display("-----------------------");
-        end
-    endtask
+
 
 endmodule

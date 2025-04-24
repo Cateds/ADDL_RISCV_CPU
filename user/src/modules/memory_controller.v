@@ -5,21 +5,19 @@ module memory_ctrl(
         input wire [31:0] mem_addr,
         input wire [31:0] mem_wdata,
         output wire [31:0] mem_rdata,
-        output wire mem_ready,
 
         // External signals
-        output wire ram_ce_n,
-        output wire ram_we_n,
-        output wire ram_oe_n,
-        output wire [3:0] ram_byte_en_n,
-        output wire [31:0] ram_addr,
-        inout wire [31:0] ram_data,
+        output reg ram_ce,  // RAM chip enable
+        output wire bus_we,
+        output wire bus_re,
+        output wire [3:0] bus_data_byte_sel,
+        output wire [31:0] bus_addr,
+        inout wire [31:0] bus_data,
 
         // Clock and reset
         input wire clk,
         input wire rst_n
     );
 
-    // TODO: Implement the memory controller logic here
-    
+
 endmodule

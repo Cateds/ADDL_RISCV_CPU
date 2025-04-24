@@ -12,11 +12,11 @@ module execute(
         input wire [3:0] alu_op,
         input wire alu_data1_sel,
         input wire alu_data2_sel,
-        output reg [31:0] alu_result,
+        output wire [31:0] alu_result,
         // ----- Branch Unit -----
         input wire [2:0] cmp_op,
         input wire pc_jump,
-        output reg [1:0] branch,
+        output wire [1:0] branch,
         // ----- Previous Stage Signals -----
         input wire [31:0] pc_next_in,
         output wire [31:0] pc_next_out,

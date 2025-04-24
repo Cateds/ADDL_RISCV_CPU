@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
-
 `include "../test_utils.vh"
+
 module tb_write_back();
 
     // 声明常量实例
@@ -43,8 +43,6 @@ module tb_write_back();
             .reg_we_out 	(reg_we_out  )
         );
 
-    always #5 clk = ~clk;
-
     task check_result;
         parameter BUFFER_LEN = 128;
         input [BUFFER_LEN*8-1:0] description;
@@ -56,6 +54,8 @@ module tb_write_back();
             `PRINT_TEST_HEX("reg_we", reg_we_out, reg_we_in);
         end
     endtask
+
+    // always #5 clk = ~clk;
 
     initial begin
         $dumpfile("tb_write_back.vcd");

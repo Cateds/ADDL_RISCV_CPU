@@ -2,6 +2,7 @@ module instruction_fetch(
         // * Clock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,
+        input wire en,
 
         // * Internal Signals Connection --------------------
         input wire [1:0] branch,

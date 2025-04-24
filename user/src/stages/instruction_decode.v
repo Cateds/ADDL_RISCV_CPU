@@ -7,19 +7,19 @@ module instruction_decode(
         // About Instruction Decode
         input wire [31:0] pc,
         input wire [31:0] instruction,
-        output reg [31:0] immediate,
-        output reg [31:0] rs1_data,
-        output reg [31:0] rs2_data,
-        output reg [3:0] alu_op,
-        output reg [2:0] cmp_op,
-        output reg [4:0] rd,
-        output reg reg_we,
-        output reg alu_data1_sel,
-        output reg alu_data2_sel,
-        output reg [1:0] mem_op,
-        output reg [2:0] mem_sel,
-        output reg [1:0] wb_sel,
-        output reg pc_jump,
+        output wire [31:0] immediate,
+        output wire [31:0] rs1_data,
+        output wire [31:0] rs2_data,
+        output wire [3:0] alu_op,
+        output wire [2:0] cmp_op,
+        output wire [4:0] rd,
+        output wire reg_we,
+        output wire alu_data1_sel,
+        output wire alu_data2_sel,
+        output wire [1:0] mem_op,
+        output wire [2:0] mem_sel,
+        output wire [1:0] wb_sel,
+        output wire pc_jump,
         // About Register File
         input wire [4:0] wb_rd,
         input wire wb_reg_we,
@@ -36,8 +36,8 @@ module instruction_decode(
     assign pc_out = pc;
     assign pc_next_out = pc_next_in;
 
-    reg [4:0] rs1;
-    reg [4:0] rs2;
+    wire [4:0] rs1;
+    wire [4:0] rs2;
 
     instr_decoder
         u_instr_decoder(

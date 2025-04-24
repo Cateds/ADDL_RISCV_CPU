@@ -54,8 +54,8 @@ module tb_execute();
         begin
             #1;
             $display("Test: %0s (@time: %0t)", description, $time);
-            `PRINT_TEST_BIN("ALU Result", alu_result, expected_alu_result);
-            `PRINT_TEST_BIN("Branch", branch, expected_branch);
+            `PRINT_TEST_HEX("ALU Result", alu_result, expected_alu_result);
+            `PRINT_TEST_HEX("Branch", branch, expected_branch);
         end
     endtask
 
@@ -166,6 +166,63 @@ module tb_execute();
         alu_data2_sel = alu_mux_enum.D2_RS2;
         expected_alu_result = pc + rs2_data;
         check_result("pc + rs2_data");
+
+        // * =============== Branch Test ===============
+        #10;
+        alu_data1_sel = alu_mux_enum.D1_RS1;
+        alu_data2_sel = alu_mux_enum.D2_RS2;
+        rs1_data = -3;
+        rs2_data = 20;
+        pc_jump = 0;
+        $display("=============== Branch 指令响应 ===============");    
+
+        // * ----- rs1_data < rs2_data -----
+        cmp_op = cmp_op_enum.LTU;
+        alu_op = alu_op_enum.SLTU;
+        expected_alu_result = (rs1_data < rs2_data) ? 32'd1 : 32'd0;
+        expected_branch = expected_alu_result[0] ? 2'b01 : 2'b00;
+        check_result("rs1_data < rs2_data");
+
+        #10;
+        // * ----- rs1_data >= rs2_data -----
+        cmp_op = cmp_op_enum.GEU;
+        alu_op = alu_op_enum.SLTU;
+        expected_alu_result = (rs1_data < rs2_data) ? 32'd1 : 32'd0;
+        expected_branch = expected_alu_result[0] ? 2'b00 : 2'b01;
+        check_result("rs1_data >= rs2_data");
+
+        #10;
+        // * ----- (signed) rs1_data < (signed) rs2_data -----
+        cmp_op = cmp_op_enum.LT;
+        alu_op = alu_op_enum.SLT;
+        expected_alu_result = ($signed(rs1_data) < $signed(rs2_data)) ? 32'd1 : 32'd0;
+        expected_branch = expected_alu_result[0] ? 2'b01 : 2'b00;
+        check_result("(signed) rs1_data < (signed) rs2_data");
+
+        #10;
+        // * ----- (signed) rs1_data >= (signed) rs2_data -----
+        cmp_op = cmp_op_enum.GE;
+        alu_op = alu_op_enum.SLT;
+        expected_alu_result = ($signed(rs1_data) < $signed(rs2_data)) ? 32'd1 : 32'd0;
+        expected_branch = expected_alu_result[0] ? 2'b00 : 2'b01;
+        check_result("(signed) rs1_data >= (signed) rs2_data");
+
+        #10;
+        // * ----- rs1_data != rs2_data -----
+        cmp_op = cmp_op_enum.NE;
+        alu_op = alu_op_enum.XOR;
+        expected_alu_result = rs1_data ^ rs2_data;
+        expected_branch = (expected_alu_result == 32'b0) ? 2'b00 : 2'b01;
+        check_result("rs1_data != rs2_data");
+
+        #10;
+        // * ----- Jump Flag from Instruction Decoder -----
+        pc_jump = 1;
+        cmp_op = cmp_op_enum.GE;
+        alu_op = alu_op_enum.SLT;
+        expected_alu_result = ($signed(rs1_data) < $signed(rs2_data)) ? 32'd1 : 32'd0;
+        expected_branch = 2'b10;
+        check_result("Jump Flag from Instruction Decoder");
 
         #10;
         $display("测试完成");

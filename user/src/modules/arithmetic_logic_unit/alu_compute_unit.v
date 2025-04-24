@@ -26,13 +26,11 @@ module alu_compute_unit(
             alu_op_enum.SRA:
                 alu_result = $signed(alu_data_1) >>> alu_data_2[4:0];
             alu_op_enum.SLT:
-                alu_result =
-                ($signed(alu_data_1) < $signed(alu_data_2))
-                ? 32'b1 : 32'b0; // Signed comparison
+                alu_result =  ($signed(alu_data_1) < $signed(alu_data_2))
+                    ? 32'b1 : 32'b0; // Signed comparison
             alu_op_enum.SLTU:
-                alu_result =
-                (alu_data_1 < alu_data_2)
-                ? 32'b1 : 32'b0; // Unsigned comparison
+                alu_result = (alu_data_1 < alu_data_2)
+                    ? 32'b1 : 32'b0; // Unsigned comparison
             default:
                 alu_result = 32'b0; // No operation
         endcase

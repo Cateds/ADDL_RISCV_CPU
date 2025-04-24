@@ -8,6 +8,7 @@ prj/*
 .vscode/settings.json
 # 代码行数统计插件 统计结果
 /.VSCodeCounter
+/tools
 
 # * ---------- Automatic Generated Git Ignore Settings ---------- *
 

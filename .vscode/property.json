@@ -6,5 +6,5 @@
 	"soc": {
 		"core": "none"
 	},
-	"device": "none"
+	"device": "xc7z020clg484-1"
 }

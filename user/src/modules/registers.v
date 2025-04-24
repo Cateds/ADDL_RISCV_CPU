@@ -1,13 +1,13 @@
 module registers(
-        input wire [4:0] rs1,           // 源寄存器1
-        input wire [4:0] rs2,           // 源寄存器2
-        input wire [4:0] rd,            // 目标寄存器
-        input wire clk,                 // 时钟信号
-        input wire rst_n,               // 复位信号，低有效
-        input wire we,                  // 写使能信号
-        input wire [31:0] write_data,   // 写入数据
-        output reg [31:0] rs1_data,     // 源寄存器1数据输出
-        output reg [31:0] rs2_data      // 源寄存器2数据输出
+        input wire [4:0] rs1,           // Source Register Address 1
+        input wire [4:0] rs2,           // Source Register Address 2
+        input wire [4:0] rd,            // Destination Register Address
+        input wire clk,                 // Input clock signal
+        input wire rst_n,               // Active low reset signal
+        input wire we,                  // Write enable signal
+        input wire [31:0] write_data,   // Data to be written to the register
+        output reg [31:0] rs1_data,     // Source Register 1 Data Output
+        output reg [31:0] rs2_data      // Source Register 2 Data Output
     );
 
     reg [31:0] reg_file [0:31]; // 32个寄存器，每个寄存器32位

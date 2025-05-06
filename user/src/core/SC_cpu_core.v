@@ -1,4 +1,4 @@
-module cpu_core(
+module SC_cpu_core(
         // * Clock Sync Signals Connection --------------------
         input clk,
         input rst_n,
@@ -22,19 +22,19 @@ module cpu_core(
     wire [31:0]     IF_pc_next;
     wire [31:0]     IF_instruction;
     // ----- Instruction Decode -----
-    reg [31:0]      ID_immediate;
-    reg [31:0]      ID_rs1_data;
-    reg [31:0]      ID_rs2_data;
-    reg [3:0]       ID_alu_op;
-    reg [2:0]       ID_cmp_op;
-    reg [4:0]       ID_rd;
-    reg             ID_reg_we;
-    reg             ID_alu_data1_sel;
-    reg             ID_alu_data2_sel;
-    reg [1:0]       ID_mem_op;
-    reg [2:0]       ID_mem_sel;
-    reg [1:0]       ID_wb_sel;
-    reg             ID_branch_jump;
+    wire [31:0]      ID_immediate;
+    wire [31:0]      ID_rs1_data;
+    wire [31:0]      ID_rs2_data;
+    wire [3:0]       ID_alu_op;
+    wire [2:0]       ID_cmp_op;
+    wire [4:0]       ID_rd;
+    wire             ID_reg_we;
+    wire             ID_alu_data1_sel;
+    wire             ID_alu_data2_sel;
+    wire [1:0]       ID_mem_op;
+    wire [2:0]       ID_mem_sel;
+    wire [1:0]       ID_wb_sel;
+    wire             ID_branch_jump;
     wire [31:0]     ID_pca_result;
     wire [31:0]     ID_pc;
     wire [31:0]     ID_pc_next;
@@ -66,11 +66,12 @@ module cpu_core(
 
     // * Submodule Instantiation --------------------
 
-    instruction_fetch
+    SC_instruction_fetch
         u_instruction_fetch(
             // * Clock Sync ----------
             .clk             	(clk),
             .rst_n           	(rst_n),
+            .en             	(1'b1),
             // * Internal ----------
             .branch          	(EX_branch),
             .alu_result      	(EX_alu_result),
@@ -83,7 +84,7 @@ module cpu_core(
             .rom_data        	(rom_data)
         );
 
-    instruction_decode
+    SC_instruction_decode
         u_instruction_decode(
             // * Clock Sync ----------
             .clk             	(clk),
@@ -114,7 +115,7 @@ module cpu_core(
             .pc_next_out     	(ID_pc_next)
         );
 
-    execute
+    SC_execute
         u_execute(
             // * Clock Sync ----------
             .clk           	        (clk),
@@ -150,7 +151,7 @@ module cpu_core(
             .immediate_out          (EX_immediate)
         );
 
-    memory_access
+    SC_memory_access
         u_memory_access(
             // * Clock Sync ----------
             .clk            	(clk),
@@ -181,7 +182,7 @@ module cpu_core(
             .bus_rdata      	(bus_rdata)
         );
 
-    write_back
+    SC_write_back
         u_write_back(
             // * Clock Sync ----------
             .clk        	(clk),

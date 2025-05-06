@@ -19,14 +19,12 @@ module instr_decoder_I_Calc(
     localparam FUNC7_Former = 7'b0000000;
     localparam FUNC7_Latter = 7'b0100000;
 
-    wire func7;
-    wire [2:0] func3;
+    wire [6:0] func7 = instruction[31:25];
+    wire [2:0] func3 = instruction[14:12];
 
     assign immediate = {{20{instruction[31]}}, instruction[31:20]};
     assign rs1 = instruction[19:15];
-    assign func3 = instruction[14:12];
     assign rd = instruction[11:7];
-    assign func7 = instruction[31:25];
 
     always @(*) begin
         case (func3)
@@ -81,10 +79,11 @@ module instr_decoder_I_Load(
     localparam FUNC3_LBU = 3'b100; // Load Byte Unsigned
     localparam FUNC3_LHU = 3'b101; // Load Halfword Unsigned
 
+    wire [2:0] func3 = instruction[14:12];
+
     assign immediate = {{20{instruction[31]}}, instruction[31:20]};
     assign rs1 = instruction[19:15];
     assign rd = instruction[11:7];
-    assign func3 = instruction[14:12];
     assign mem_op = mem_op_enum.LOAD;
     assign alu_op = alu_op_enum.ADD;
 
@@ -144,9 +143,8 @@ module instr_decoder_I_Env(
     localparam FUNC12_ECALL = 12'b0;
     localparam FUNC12_EBREAK = 12'b1;
 
-    wire [2:0] func3;
-    assign func3 = instruction[14:12];
-    assign func12 = instruction[31:20];
+    wire [2:0] func3 = instruction[14:12];
+    wire [11:0] func12 = instruction[31:20];
 
     // TODO: CSR
     reg [11:0] csr;
@@ -192,7 +190,7 @@ module instr_decoder_I_Fence(
     localparam FUNC3_FENCE = 3'b000;
     localparam FUNC3_FENCE_I = 3'b001;
 
-    assign func3 = instruction[14:12];
+    wire [2:0] func3 = instruction[14:12];
 
     assign pred = instruction[31:24];
     assign succ = instruction[23:16];

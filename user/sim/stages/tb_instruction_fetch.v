@@ -15,7 +15,7 @@ module tb_instruction_fetch();
     // 期望信号值
     reg [31:0] expected_pc;
     wire [31:0] expected_pc_next;
-    reg [31:0] expected_instruction;
+    wire [31:0] expected_instruction;
 
     // 输出信号值
     wire [31:0] pc;
@@ -24,9 +24,9 @@ module tb_instruction_fetch();
     wire [31:0] rom_addr;
 
     // 内部连接
-    reg [31:0] rom_data;
+    wire [31:0] rom_data;
 
-    instruction_fetch
+    SC_instruction_fetch
         u_if(
             .clk             	(clk              ),
             .rst_n           	(rst_n            ),
@@ -41,18 +41,18 @@ module tb_instruction_fetch();
             .rom_data        	(rom_data         )
         );
 
-    rom256_from_file
-        #(.FILE_PATH ("D:\\MyDocs\\Codes\\Embedded_FPGA\\ADDL_RISCV_CPU\\user\\sim\\stages\\tb_instruction_fetch.hex"))
+    blk_mem_ROM
         connected_rom(
-            .addr 	(rom_addr  ),
-            .data 	(rom_data  )
+            .clka 	(~clk  ),
+            .addra 	(rom_addr  ),
+            .douta 	(rom_data  )
         );
 
-    rom256_from_file
-        #(.FILE_PATH ("D:\\MyDocs\\Codes\\Embedded_FPGA\\ADDL_RISCV_CPU\\user\\sim\\stages\\tb_instruction_fetch.hex"))
+    blk_mem_ROM
         expected_rom(
-            .addr 	(expected_pc  ),
-            .data 	(expected_instruction  )
+            .clka 	(~clk  ),
+            .addra 	(expected_pc  ),
+            .douta 	(expected_instruction  )
         );
 
 
@@ -80,14 +80,14 @@ module tb_instruction_fetch();
         pc_adder_result = 128;
         alu_result = 192;
         expected_pc = 0;
-        
+
         // * ----- Reset -----
-        #10
-        check_result("Initial State");
+        #19
+         check_result("Initial State");
 
         // * ----- Self Added -----
         rst_n = 1;
-        #9;
+        #10;
         expected_pc = expected_pc + 4;
         #1;
         check_result("Normal (+4)");

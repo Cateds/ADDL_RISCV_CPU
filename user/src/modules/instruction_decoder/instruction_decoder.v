@@ -28,11 +28,13 @@ module instr_decoder(
     localparam OPCODE_I_Jump =  7'b1100111;
     localparam OPCODE_I_Env =   7'b1110011;
     localparam OPCODE_I_Fence = 7'b0000111;
-    localparam OPCODE_S =       7'b0000011;
+    localparam OPCODE_S =       7'b0100011;
     localparam OPCODE_B =       7'b1100011;
     localparam OPCODE_U_LUI =   7'b0110111;
     localparam OPCODE_U_AUIPC = 7'b0010111;
     localparam OPCODE_J =       7'b1101111;
+
+    wire [6:0] opcode;  // The opcode extracted from the instruction
 
     assign opcode = instruction[6:0];
 

@@ -25,7 +25,7 @@ module program_counter(
         endcase
     end
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n)
             pc <= 32'h0;
         else if (en)

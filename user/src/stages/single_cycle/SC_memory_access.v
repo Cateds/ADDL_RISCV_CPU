@@ -1,4 +1,4 @@
-module memory_access(
+module SC_memory_access(
         // * Clock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,

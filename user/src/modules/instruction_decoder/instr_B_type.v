@@ -17,8 +17,7 @@ module instr_decoder_B(
     localparam FUNC3_BLTU = 3'h6; // a < b : unsigned
     localparam FUNC3_BGEU = 3'h7; // a >= b : unsigned
 
-    wire [2:0] func3;
-    assign func3 = instruction[14:12];
+    wire [2:0] func3 = instruction[14:12];
 
     // B 类型指令立即数:
     // imm[12|10:5|4:1|11] = inst[31|30:25|11:8|7]

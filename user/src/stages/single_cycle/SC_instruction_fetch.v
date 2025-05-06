@@ -1,4 +1,4 @@
-module instruction_fetch(
+module SC_instruction_fetch(
         // * Clock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,

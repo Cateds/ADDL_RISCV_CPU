@@ -21,17 +21,17 @@ module tb_execute();
     reg [2:0] cmp_op;
     reg alu_data1_sel;
     reg alu_data2_sel;
-    reg branch_jump;
+    reg pc_jump;
 
     // * 期望输出信号 ----------
     reg [31:0] expected_alu_result;
     reg [1:0] expected_branch;
 
     // * 实际输出信号 ---------
-    reg [31:0] alu_result;
-    reg [1:0] branch;
+    wire [31:0] alu_result;
+    wire [1:0] branch;
 
-    execute
+    SC_execute
         u_execute(
             .clk                 	(clk                  ),
             .rst_n               	(rst_n                ),
@@ -44,7 +44,7 @@ module tb_execute();
             .alu_data2_sel       	(alu_data2_sel        ),
             .alu_result          	(alu_result           ),
             .cmp_op              	(cmp_op               ),
-            .branch_jump            (branch_jump          ),
+            .branch_jump            (pc_jump          ),
             .branch              	(branch               )
         );
 
@@ -75,7 +75,7 @@ module tb_execute();
         pc = 32'd20;
         alu_op = alu_op_enum.NOP;
         cmp_op = cmp_op_enum.NOP;
-        branch_jump = 0;
+        pc_jump = 0;
         expected_branch = pc_mux_enum.NOP;
 
         // * =============== ALU Test ===============

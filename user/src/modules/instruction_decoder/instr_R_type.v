@@ -1,9 +1,9 @@
 module instr_decoder_R(
-        input wire [31:0] instruction,  // 输入指令
+        input [31:0] instruction,  // 输入指令
         output reg [3:0] alu_op, // ALU 操作码
-        output wire [4:0] rd, // 目标寄存器
-        output wire [4:0] rs1,  // 源寄存器 1
-        output wire [4:0] rs2   // 源寄存器 2
+        output [4:0] rd, // 目标寄存器
+        output [4:0] rs1,  // 源寄存器 1
+        output [4:0] rs2   // 源寄存器 2
     );
 
     ALU_OP_ENUM alu_op_enum();
@@ -19,8 +19,9 @@ module instr_decoder_R(
     localparam FUNC7_Former = 7'b0000000;
     localparam FUNC7_Latter = 7'b0100000;
 
-    assign func7 = instruction[31:25];
-    assign func3 = instruction[14:12];
+    wire [6:0] func7 = instruction[31:25];
+    wire [2:0] func3 = instruction[14:12];
+
     assign rd = instruction[11:7];
     assign rs1 = instruction[19:15];
     assign rs2 = instruction[24:20];

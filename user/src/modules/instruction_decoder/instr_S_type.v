@@ -16,7 +16,7 @@ module instr_decoder_S(
     localparam FUNC3_SH = 3'b001; // Store Halfword
     localparam FUNC3_SW = 3'b010; // Store Word
 
-    assign func3 = instruction[14:12];
+    wire [2:0] func3 = instruction[14:12];
     assign rs1 = instruction[19:15];    // 源寄存器 1，存储要存入内存的地址
     assign rs2 = instruction[24:20];    // 源寄存器 2，存储要存入内存的数据
     assign immediate = {{20{instruction[31]}}, instruction[31:25], instruction[11:7]}; // S 类型指令立即数

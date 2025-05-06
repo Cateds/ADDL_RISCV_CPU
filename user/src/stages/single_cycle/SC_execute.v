@@ -1,4 +1,4 @@
-module execute(
+module SC_execute(
         // * Clock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,

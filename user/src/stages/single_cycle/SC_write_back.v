@@ -1,4 +1,4 @@
-module write_back(
+module SC_write_back(
         // * Clkock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,

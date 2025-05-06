@@ -1,4 +1,4 @@
-module instruction_decode(
+module SC_instruction_decode(
         // * Clock Sync Signals Connection --------------------
         input wire clk,
         input wire rst_n,

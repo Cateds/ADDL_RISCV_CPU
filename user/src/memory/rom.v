@@ -1,5 +1,5 @@
 module ROM_unit #(
-        parameter FILE_PATH = "hex/rom_init.hex",
+        parameter INIT_FILE_PATH = "hex/rom_init.hex",
         parameter ADDR_WIDTH = 16
     )(
         input [ADDR_WIDTH-1:0] addr,
@@ -11,7 +11,7 @@ module ROM_unit #(
     (* ram_style = "block" *) reg [31:0] memory [0:MEM_SIZE-1];
 
     initial begin
-        $readmemh(FILE_PATH, memory);
+        $readmemh(INIT_FILE_PATH, memory);
     end
 
     assign data = memory[addr];

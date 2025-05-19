@@ -13,7 +13,7 @@ module write_back_unit_tb();
     // Instantiate DUT
     write_back_unit dut(
         .wb_sel(wb_sel),
-        .alu_result(alu_result),-
+        .alu_result(alu_result),
         .immediate(immediate),
         .mem_data(mem_data),
         .pc_next(pc_next),

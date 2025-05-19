@@ -5,14 +5,23 @@ module tb_SC_cpu_top();
     reg rst_n;
 
     SC_cpu_top
-        u_cpu_top(
+        #(
+            .ROM_FILE_PATH   (
+                "D:/MyDocs/Codes/Embedded_FPGA/ADDL_RISCV_CPU/user/data/rom_init.hex"
+            ),
+            .RAM_FILE_PATH   (
+                "D:/MyDocs/Codes/Embedded_FPGA/ADDL_RISCV_CPU/user/data/ram_init.hex"
+            )
+        )
+        u_cpu_top (
             .clk   	(clk    ),
             .rst_n 	(rst_n  )
         );
 
     initial begin
         clk = 0;
-        forever #5 clk = ~clk; // 10 time unit clock period
+        forever
+            #5 clk = ~clk; // 10 time unit clock period
     end
 
     initial begin
@@ -24,7 +33,7 @@ module tb_SC_cpu_top();
         $dumpfile("tb_SC_cpu_top.vcd");
         $dumpvars(0, tb_SC_cpu_top);
         $display("Simulation started...");
-        #400;
+        #100;
         $display("Simulation finished.");
         $finish();
     end

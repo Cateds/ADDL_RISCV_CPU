@@ -4,7 +4,7 @@ module reg_if_id(
         input rst_n,
         // * Pipeline Signals Connection --------------------
         input stall,
-        input flush,
+        input flush
         // * Input Signals Connection --------------------
 
         // * Output Signals Connection --------------------

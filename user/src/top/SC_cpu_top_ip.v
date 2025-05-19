@@ -1,13 +1,8 @@
-module SC_cpu_top #(
-        parameter ROM_FILE_PATH = "",
-        parameter RAM_FILE_PATH = ""
-    )(
+module SC_cpu_top_ip(
         input clk,
         input rst_n
     );
 
-    // output declaration of module SC_cpu_core
-    wire [31:0] rom_addr;
     wire [31:0] rom_data;
     wire bus_re;
     wire [3:0] bus_we;
@@ -28,14 +23,10 @@ module SC_cpu_top #(
             .bus_rdata  (bus_rdata)
         );
 
-    ROM_unit
-        #(
-            .INIT_FILE_PATH   (ROM_FILE_PATH),
-            .ADDR_WIDTH  (16)
-        )
-        u_ROM_unit (
-            .addr  (rom_addr[17:2]),
-            .data  (rom_data)
+    dist_mem_ROM
+        u_dist_mem_ROM(
+            .a   	(rom_addr[17:2]    ),
+            .spo 	(rom_data  )
         );
 
     wire ram_ce;
@@ -50,18 +41,14 @@ module SC_cpu_top #(
             .gpio_ce   (gpio_ce)
         );
 
-    RAM_unit
-        #(
-            .ADDR_WIDTH  (16),
-            .INIT_FILE_PATH (RAM_FILE_PATH)
-        )
-        u_RAM_unit(
-            .clk    (clk),
-            .ce     (ram_ce),
-            .we     (bus_we),
-            .addr   (bus_addr[17:2]),
-            .din    (bus_wdata),
-            .dout   (bus_rdata)
+    blk_mem_RAM
+        u_blk_mem_RAM(
+            .clka  	(~clk   ),
+            .ena   	(ram_ce    ),
+            .wea   	(bus_we    ),
+            .addra 	(bus_addr[17:2]  ),
+            .dina  	(bus_wdata   ),
+            .douta 	(bus_rdata  )
         );
 
 endmodule

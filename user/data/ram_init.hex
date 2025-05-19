@@ -1,0 +1,11 @@
+// RAM initialization data
+// Because of Memory Mapping, the address
+// starts from 0x10000000
+ffffff00
+ffffff01
+ffffff02
+ffffff03
+ffffff04
+ffffff05
+ffffff06
+ffffff07

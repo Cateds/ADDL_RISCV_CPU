@@ -6,11 +6,5 @@
   "soc": {
     "core": "none"
   },
-  "device": "xc7z020clg484-1",
-  "iverilogCompileOptions": {
-    "standard": "2012",
-    "includes": [
-      "${workspace}/user/src/include"
-    ]
-  }
+  "device": "xc7z020clg484-1"
 }

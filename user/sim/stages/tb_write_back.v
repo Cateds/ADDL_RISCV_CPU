@@ -27,7 +27,7 @@ module tb_write_back();
     wire [4:0] rd_out;
     wire reg_we_out;
 
-    write_back
+    SC_write_back
         u_write_back(
             .clk        	(clk         ),
             .rst_n      	(rst_n       ),

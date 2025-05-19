@@ -1,5 +1,6 @@
 module RAM_unit #(
-        parameter ADDR_WIDTH = 16
+        parameter ADDR_WIDTH = 16,
+        parameter INIT_FILE_PATH = ""
     )(
         input clk,
         input ce,
@@ -12,6 +13,12 @@ module RAM_unit #(
     localparam MEM_SIZE = 1 << ADDR_WIDTH;
 
     (* ram_style = "block" *) reg [31:0] mem [0:MEM_SIZE-1];
+
+    initial begin
+        if (INIT_FILE_PATH != "") begin
+            $readmemh(INIT_FILE_PATH, mem);
+        end
+    end
 
     always @(posedge clk) begin
         if (ce) begin

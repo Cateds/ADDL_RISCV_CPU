@@ -46,8 +46,7 @@ module SC_cpu_top #(
             .bus_addr  (bus_addr),
             .bus_re    (bus_re),
             .bus_we    (bus_we),
-            .ram_ce    (ram_ce),
-            .gpio_ce   (gpio_ce)
+            .ram_ce    (ram_ce)
         );
 
     RAM_unit

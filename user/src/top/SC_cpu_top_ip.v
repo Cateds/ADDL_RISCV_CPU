@@ -25,12 +25,13 @@ module SC_cpu_top_ip(
 
     dist_mem_ROM
         u_dist_mem_ROM(
-            .a   	(rom_addr[17:2]    ),
-            .spo 	(rom_data  )
+            .a       (rom_addr[17:2]),
+            .spo     (rom_data)
         );
 
     wire ram_ce;
-    wire gpio_ce;
+    wire gpioA_ce;
+    wire gpioB_ce;
 
     bus_controller
         bus_ctrl(
@@ -38,17 +39,18 @@ module SC_cpu_top_ip(
             .bus_re    (bus_re),
             .bus_we    (bus_we),
             .ram_ce    (ram_ce),
-            .gpio_ce   (gpio_ce)
+            .gpioA_ce  (gpioA_ce),
+            .gpioB_ce  (gpioB_ce)
         );
 
     blk_mem_RAM
         u_blk_mem_RAM(
-            .clka  	(~clk   ),
-            .ena   	(ram_ce    ),
-            .wea   	(bus_we    ),
-            .addra 	(bus_addr[17:2]  ),
-            .dina  	(bus_wdata   ),
-            .douta 	(bus_rdata  )
+            .clka      (~clk),
+            .ena       (ram_ce),
+            .wea       (bus_we),
+            .addra     (bus_addr[17:2]),
+            .dina      (bus_wdata),
+            .douta     (bus_rdata)
         );
 
 endmodule

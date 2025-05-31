@@ -24,7 +24,7 @@ module tb_SC_cpu_top_ip();
         $dumpfile("tb_SC_cpu_top_ip.vcd");
         $dumpvars(0, tb_SC_cpu_top_ip);
         $display("Simulation started...");
-        #100;
+        #200;
         $display("Simulation finished.");
         $finish();
     end

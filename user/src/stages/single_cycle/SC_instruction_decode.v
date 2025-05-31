@@ -25,11 +25,10 @@ module SC_instruction_decode(
         input wire wb_reg_we,
         input wire [31:0] wb_data,
         // About PC Adder
-        output wire [31:0] pc_adder_result,
-        // Previous Stage Signals
+        output wire [31:0] pc_adder_result,        // Previous Stage Signals
         output wire [31:0] pc_out,
         input wire [31:0] pc_next_in,
-        input wire [31:0] pc_next_out
+        output wire [31:0] pc_next_out
     );
 
     // 直通信号

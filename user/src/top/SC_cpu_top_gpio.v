@@ -1,10 +1,13 @@
-module SC_cpu_top_ip(
+module SC_cpu_top_gpio #(
+        parameter ROM_FILE_PATH = "",
+        parameter RAM_FILE_PATH = ""
+    )(
         input clk,
         input rst_n,
-        inout [15:0] gpioA_io,
-        inout [15:0] gpioB_io
+        inout [15:0] gpioA_io
     );
 
+    // output declaration of module SC_cpu_core
     wire [31:0] rom_addr;
     wire [31:0] rom_data;
     wire bus_re;
@@ -26,15 +29,18 @@ module SC_cpu_top_ip(
             .bus_rdata  (bus_rdata)
         );
 
-    dist_mem_ROM
-        u_dist_mem_ROM(
-            .a       (rom_addr[17:2]),
-            .spo     (rom_data)
+    ROM_unit
+        #(
+            .INIT_FILE_PATH   (ROM_FILE_PATH),
+            .ADDR_WIDTH  (16)
+        )
+        u_ROM_unit (
+            .addr  (rom_addr[17:2]),
+            .data  (rom_data)
         );
 
     wire ram_ce;
-    wire gpioA_ce;
-    wire gpioB_ce;
+    wire gpio_ce;
 
     bus_controller
         bus_ctrl(
@@ -42,18 +48,7 @@ module SC_cpu_top_ip(
             .bus_re    (bus_re),
             .bus_we    (bus_we),
             .ram_ce    (ram_ce),
-            .gpioA_ce  (gpioA_ce),
-            .gpioB_ce  (gpioB_ce)
-        );
-
-    blk_mem_wrapper
-        RAM(
-            .clka      (~clk),
-            .ena       (ram_ce),
-            .wea       (bus_we),
-            .addra     (bus_addr[17:2]),
-            .dina      (bus_wdata),
-            .douta     (bus_rdata)
+            .gpioA_ce  (gpioA_ce)
         );
 
     gpio
@@ -64,22 +59,10 @@ module SC_cpu_top_ip(
             .bus_we    	(bus_we     ),
             .bus_re    	(bus_re     ),
             .bus_wdata 	(bus_wdata  ),
-            .bus_addr  	(bus_addr[17:2]   ),
+            .bus_addr  	(bus_addr[17:2]),
             .bus_rdata 	(bus_rdata  ),
-            .gpio_io   	(gpioA_io    )
+            .gpio_io   	(gpioA_io   )
         );
 
-    gpio
-        gpioB(
-            .clk       	(~clk        ),
-            .rst_n     	(rst_n      ),
-            .gpio_ce   	(gpioB_ce   ),
-            .bus_we    	(bus_we     ),
-            .bus_re    	(bus_re     ),
-            .bus_wdata 	(bus_wdata  ),
-            .bus_addr  	(bus_addr[17:2]  ),
-            .bus_rdata 	(bus_rdata  ),
-            .gpio_io   	(gpioB_io    )
-        );
 
 endmodule

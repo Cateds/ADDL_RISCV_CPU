@@ -1,10 +1,10 @@
-# RISC-V CPU 项目
+# 数字逻辑设计与应用：RISC-V 指令集的 CPU 实现
 
-> Final Project for Application and Design of Digital Logics (ADDL) Challenge Course @ 2024-2025 Spring, Glasgow College, UESTC.
+> Final Project for _Application and Design of Digital Logics (ADDL) Challenge Course_ @ 2024-2025 Spring, Glasgow College, UESTC.
 
-本项目实现了一个基本的 RISC-V 架构 CPU，包含完整的指令解码、执行和内存访问功能。
+本项目实现了一个基本的 RISC-V 架构 CPU，支持部分 `RV32I` 指令集，包含完整的指令解码、执行和内存访问功能；同时实现了一个适配该 CPU 的汇编器，支持将 RISC-V 汇编代码转换为适配 IP 核和仿真用途的机器码。
 
-项目开发环境使用 Visual Studio Code + DigitalIDE 插件，支持 Icarus Verilog 仿真。
+项目在 Verilog 部分使用 Visual Studio Code + DigitalIDE 插件，支持 Icarus Verilog 仿真，带有 Xilinx IP 核的模块使用 Vivado 进行仿真测试。汇编器部分使用 Rust 实现。
 
 ## 项目结构
 

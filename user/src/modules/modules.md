@@ -18,16 +18,25 @@ modules/
 │   ├── instr_B_type.v            # B 型指令解码器
 │   ├── instr_I_type.v            # I 型指令解码器
 │   ├── instr_J_type.v            # J 型指令解码器
-│   ├── instr_R_type.v            # R 型指令解码器
+│   ├── instr_R_type.v            # R **型指令解码器**
 │   ├── instr_S_type.v            # S 型指令解码器
 │   ├── instr_U_type.v            # U 型指令解码器
-│   └── instruction_decoder.v     # 指令解码器顶层模块
+│   ├── instruction_decoder.v     # 指令解码器顶层模块
+│   ├── test_instr_R_type.v       # R 型指令测试台
+│   ├── test_instr_U_type.v       # U 型指令测试台
+│   └── instr.md                  # 指令解码器说明文档
+├── memory_access_unit/           # 存储访问单元
+│   ├── memory_access_unit.v      # 存储访问单元顶层模块
+│   ├── mem_load.v                # 内存加载单元
+│   └── mem_store.v               # 内存存储单元
 ├── branch.v                      # 分支单元
-├── memory_controller.v           # 存储器控制器
 ├── pc_adder.v                    # PC 加法器
 ├── program_counter.v             # 程序计数器
 ├── registers.v                   # 寄存器组
-└── write_back_unit.v             # 写回单元
+├── write_back_unit.v             # 写回单元
+├── test_pc_adder.v               # PC 加法器测试台
+├── test_write_back_unit.v        # 写回单元测试台
+└── modules.md                    # 模块说明文档
 ```
 
 ## 核心模块概览
@@ -74,27 +83,37 @@ modules/
   - 有符号大小比较（LT/GE）
   - 无符号大小比较（LTU/GEU）
 
-### PC 加法器 (PC Adder)
+### PC 相关模块
+
+#### PC 加法器 (PC Adder)
 
 - 文件：`pc_adder.v`
 - 功能：计算下一条指令地址
-- 特点：支持指令的顺序执行（PC+4）
+- 特点：
+  - 支持指令的顺序执行（PC+4）
+  - 支持 AUIPC 指令的 PC 相对计算
+  - 支持 JAL 和分支指令的地址计算
 
-### 写回单元 (Write Back Unit)
+### 数据写回单元 (Write Back Unit)
 
 - 文件：`write_back_unit.v`
 - 功能：处理数据写回寄存器组
 - 特点：
-  - 选择写回数据来源
+  - 选择写回数据来源（ALU 结果、内存数据、立即数、PC+4）
   - 控制写回时序
+  - 支持多路复用器选择
 
-### 存储器控制器 (Memory Controller)
+### 存储访问单元 (Memory Access Unit)
 
-- 文件：`memory_controller.v`
-- 功能：管理内存访问操作
+- 文件：`memory_access_unit/memory_access_unit.v`
+- 功能：管理内存访问操作，包括加载和存储
+- 组成部分：
+  - 内存加载单元 (`mem_load.v`)
+  - 内存存储单元 (`mem_store.v`)
 - 支持：
-  - 指令获取
-  - 数据读写
+  - 字节、半字、字的加载和存储
+  - 有符号和无符号加载
+  - 内存地址计算
 
 ## 控制和状态寄存器 (CSR)
 

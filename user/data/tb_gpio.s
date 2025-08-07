@@ -15,4 +15,3 @@ _main:
 
     addi t2, t0, 0x00 // GPIO 输入寄存器地址
     lh t4, 0(t2) // 读取 GPIO 输入值
-    

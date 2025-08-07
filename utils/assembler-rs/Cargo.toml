@@ -1,0 +1,18 @@
+[package]
+name = "assembler-rs"
+version = "0.2.0"
+edition = "2021"
+
+[[bin]]
+name = "asm-rs"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5.40", features = ["derive"] }
+colored = "3.0.0"
+strum = "0.27.1"
+strum_macros = "0.27.1"
+thiserror = "2.0.12"
+
+[dev-dependencies]
+maplit = "1.0.2"

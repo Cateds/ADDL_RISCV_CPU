@@ -4,6 +4,7 @@
 *.view
 # Icarus Verilog 的编译结果和生成线网的临时文件
 prj/
+user/ip/*/
 # 项目级 VSCode 设置
 .vscode/settings.json
 # 代码行数统计插件 统计结果
